@@ -1,7 +1,7 @@
 {
-  "author": "TencentWSRD",
+  "author": "NickMa",
   "bugs": {
-    "url": "https://github.com/TencentWSRD/connect-cas2/issues"
+    "url": "https://github.com/nickma1986/connect-cas1/issues"
   },
   "dependencies": {
     "co": "^4.6.0",
@@ -31,7 +31,7 @@
   "directories": {
     "lib": "./lib"
   },
-  "homepage": "https://github.com/TencentWSRD/connect-cas2",
+  "homepage": "https://github.com/nickma1986/connect-cas1",
   "license": "MIT",
   "main": "index.js",
   "maintainers": [
@@ -43,7 +43,7 @@
   "name": "connect-cas2",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TencentWSRD/connect-cas2.git"
+    "url": "git+https://github.com/nickma1986/connect-cas1.git"
   },
   "scripts": {
     "start": "node ./example",

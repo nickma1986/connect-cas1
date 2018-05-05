@@ -1,19 +1,14 @@
-[![Build Status](https://travis-ci.org/TencentWSRD/connect-cas2.svg?branch=master)](https://travis-ci.org/TencentWSRD/connect-cas2)
-[![Coverage Status](https://coveralls.io/repos/github/TencentWSRD/connect-cas2/badge.svg?branch=master)](https://coveralls.io/github/TencentWSRD/connect-cas2?branch=master)
+Fork from https://github.com/TencentWSRD/connect-cas2, but support CAS 1.0
 
-# connect-cas2
+# connect-cas1
 
-A complete implement of CAS Client middleware for Express/Connect, support CAS 2.0+ protocol.
+A complete implement of CAS Client middleware for Express/Connect, support CAS 1.0 protocol.
 
-CAS(Central Authentication Service) is a single-sign-on / single-sign-off protocol for the web.
 
-We suppose you are already familiar with the CAS protocol, if not, please read this [document](https://github.com/apereo/cas/blob/master/cas-server-documentation/protocol/CAS-Protocol-Specification.md) before you use this.
-
-[中文文档](https://github.com/TencentWSRD/connect-cas2/blob/master/README.zh.md)
-
+We suppose you are already familiar with the CAS protocol, if not, please read this [document](https://github.com/apereo/cas/blob/master/cas-server-documentation/protocol/CAS-Protocol-Specification.md) before you
 ## Install
 
-    npm install connect-cas2
+    npm install connect-cas1
 
 ## Feature
 
@@ -31,7 +26,7 @@ Notice:
 
 ```javascript
 var express = require('express');
-var ConnectCas = require('connect-cas2');
+var ConnectCas = require('connect-cas1');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -56,11 +51,8 @@ var casClient = new ConnectCas({
     serverPath: 'http://your-cas-server.com',
     paths: {
       validate: '/cas/validate',
-      serviceValidate: '/buglycas/serviceValidate',
-      proxy: '/buglycas/proxy',
-      login: '/buglycas/login',
-      logout: '/buglycas/logout',
-      proxyCallback: '/buglycas/proxyCallback'
+      login: '/cas/login',
+      logout: '/cas/logout',
     },
     redirect: false,
     gateway: false,
@@ -158,28 +150,7 @@ All paths for CAS Server is depending on your CAS server.
 
 The path you want your CAS client to validate a ticket from CAS server.
 
-We'll use `${options.servicePrefix}${options.paths.validate}` as `service` parameter to any CAS server's APIs that need this parameter, for example: casServer/cas/login, casServer/cas/serviceValidate,
-
-#### options.paths.proxyCallback (String) (Optional, default: '')
-(For CAS Client)
-
-In proxy mode, setting this path means you want this path of your CAS Client to receive the callback from CAS Server(Proxy mode) to receive the PGTIOU and PGTID.
-
-This could be a relative path like the others, or it can also be a absolute path.
-
-In none-proxy mode, don't set this option!
-
-[Read this for more information about proxy mode](https://github.com/apereo/cas/blob/master/cas-server-documentation/protocol/CAS-Protocol-Specification.md#254-proxy-callback)
-
-#### options.paths.serviceValidate (String) (Optional, default: '/cas/serviceValidate')
-(For CAS Server)
-
-The path your CAS Server validate a ticket(ST).
-
-#### options.paths.proxy (String) (Optional, default: '/cas/proxy')
-(For CAS Server)
-
-The path we'll ask CAS Server to get a PT(proxy ticket) to communicate with any other back-end service.
+We'll use `${options.servicePrefix}${options.paths.validate}` as `service` parameter to any CAS server's APIs that need this parameter, for example: casServer/cas/login, casServer/cas/validate,
 
 #### options.paths.login (String) (Optional, default: '/cas/login')
 (For CAS Server)
@@ -306,7 +277,7 @@ options.restletIntegration: {
   demo1: {
     trigger: function(req) {
       // Decision whether to use restlet integration, when matched, return true.
-      // Then CAS will not force the user to login, but can get a PT and interacted with the specific back-end service that support restlet integration by a special PGT. 
+      // Then CAS will not force the user to login, but can get a PT and interacted with the specific back-end service that support restlet integration by a special PGT.
       // return false
     },
     // Parameters that will send to CAS server to get a special PGT

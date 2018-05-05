@@ -1,17 +1,14 @@
-[![Build Status](https://travis-ci.org/TencentWSRD/connect-cas2.svg?branch=master)](https://travis-ci.org/TencentWSRD/connect-cas2)
-[![Coverage Status](https://coveralls.io/repos/github/TencentWSRD/connect-cas2/badge.svg?branch=master)](https://coveralls.io/github/TencentWSRD/connect-cas2?branch=master)
+Fork from https://github.com/TencentWSRD/connect-cas2, but support CAS 1.0
 
-# connect-cas2
+# connect-cas1
 
-一个完整的CAS Client NodeJS实现，支持CAS 2.0+ 协议。
+一个完整的CAS Client NodeJS实现，支持CAS 1.0 协议。
 
 CAS(Central Authentication Service) 是一个单点登录/登出的协议，下面的文档我们假设您已经对CAS比较熟悉，否则请先查看下CAS协议的[介绍文档](https://github.com/apereo/cas/blob/master/cas-server-documentation/protocol/CAS-Protocol-Specification.md)。
 
-[English version document](https://github.com/TencentWSRD/connect-cas2/blob/master/README.md)
-
 ## Install
 
-    npm install connect-cas2
+    npm install connect-cas1
 
 ## 特性
 
@@ -29,7 +26,7 @@ CAS(Central Authentication Service) 是一个单点登录/登出的协议，下�
 
 ```javascript
 var express = require('express');
-var ConnectCas = require('connect-cas2');
+var ConnectCas = require('connect-cas1');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -54,11 +51,8 @@ var casClient = new ConnectCas({
     serverPath: 'http://your-cas-server.com',
     paths: {
       validate: '/cas/validate',
-      serviceValidate: '/buglycas/serviceValidate',
-      proxy: '/buglycas/proxy',
-      login: '/buglycas/login',
-      logout: '/buglycas/logout',
-      proxyCallback: '/buglycas/proxyCallback'
+      login: '/cas/login',
+      logout: '/cas/logout',
     },
     redirect: false,
     gateway: false,
@@ -150,26 +144,12 @@ CAS协议的各个路径配置， 包括CAS Client的和CAS Server的。
 
 用于Client侧校验ST的路径。
 
-我们将会使用`${options.servicePrefix}${options.paths.validate}`作为`service`参数的取值，所有需要service参数的CAS Server的接口都会使用这个取值，比如: casServer/cas/login, casServer/cas/serviceValidate。
+我们将会使用`${options.servicePrefix}${options.paths.validate}`作为`service`参数的取值，所有需要service参数的CAS Server的接口都会使用这个取值，比如: casServer/cas/login, casServer/cas/validate。
 
-#### options.paths.proxyCallback (String) (Optional, default: '')
-(CAS Client)
-
-在代理模型下，该路径用于CAS Client接受CAS Server的proxyCallback回调。该路径可以为相对路径或绝对路径（仅此配置支持绝对路径，因为某些场景下，可能CAS Server并不能直接通过域名访问CAS Client，此时可能需要配置为IP的绝对路径）
-
-非代理模型下，请勿设置该选项。
-
-如果你对代理模型与非代理模型有疑问，请[阅读文档](https://github.com/apereo/cas/blob/master/cas-server-documentation/protocol/CAS-Protocol-Specification.md#254-proxy-callback)获取更多信息。
-
-#### options.paths.serviceValidate (String) (Optional, default: '/cas/serviceValidate')
+#### options.paths.validate (String) (Optional, default: '/cas/validate')
 (CAS Server)
 
 CAS Server用于校验ticket的路径。
-
-#### options.paths.proxy (String) (Optional, default: '/cas/proxy')
-(CAS Server)
-
-换取proxy ticket用于与其他后台服务交互的路径。
 
 #### options.paths.login (String) (Optional, default: '/cas/login')
 (CAS Server)
@@ -268,7 +248,7 @@ app.get('/logout', function(req, res) {
 
 options.restletIntegration是一个对象, 其中key代表的特定的restlet integration的规则名, value是一个对象, 需要包含两个属性: trigger {Function}, params {Object},
 
-其中trigger决定了是否使用该条规则的参数来获取PGT, params决定了要向接口传递什么参数. 
+其中trigger决定了是否使用该条规则的参数来获取PGT, params决定了要向接口传递什么参数.
 
 对于使用restlet integration的PGT获取PT的过程用户不需要关注, 仍与调普通后端接口一样先用req.getProxyTicket获取pt, 再发送请求即可.
 
@@ -281,7 +261,7 @@ options.restletIntegration: {
   demo1: {
     trigger: function(req) {
       // Decision whether to use restlet integration, when matched, return true.
-      // Then CAS will not force the user to login, but can get a PT and interacted with the specific back-end service that support restlet integration by a special PGT. 
+      // Then CAS will not force the user to login, but can get a PT and interacted with the specific back-end service that support restlet integration by a special PGT.
       // return false
     },
     // Parameters that will send to CAS server to get a special PGT
